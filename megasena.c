@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <locale.h>
 
-#define LIN 5000
+#define LIN 10
 #define COL 6
 
 void sorteio(int *concurso[LIN][COL]){
@@ -184,13 +185,40 @@ void numerosUnicos(int vetor[LIN][COL]){
 }
 
 void quantidadeJogadas(int vetor[LIN][COL]){
-    int i, j, l, c, num[61];
+    int i, j, l, c, num[61], saiu=0;
 
     /*ZERA O VETOR NUM*/
     for(i=0;i<61;i++){
         num[i]=0;
     }
 
+    for(i=1;i<=60;i++){
+        for(l=LIN-1;l>=0;l--){
+            for(c=0;c<COL;c++){
+                if(vetor[l][c] == i){
+                    saiu = 1;
+                }//IF
+            }//FOR C
+            if(saiu == 0){
+                num[i]+=1;
+            }else{
+                break;
+            }
+        }//FOR L
+        if(saiu == 1){
+            saiu = 0;
+            continue;
+        }
+    }//FOR I
+    /*IMPRESSAO NUMEROS QUE SAIRAM NA QUANT JOGADAS*/
+    for(i=1;i<=60;i++){
+        if(num[i]==0){
+            printf("N° %02d = saiu no ultimo sorteio.\n");
+        }else{
+            printf("N° %02d = nao sai a %d sorteios seguidos\n", i, num[i]);
+        }
+    }//FOR
+    printf("\n\n");
 
 }
 
@@ -198,6 +226,8 @@ int main() {
     int l, c, i, op=0;
     int concurso[LIN][COL];
     int dezenas[60];
+
+     setlocale(LC_ALL, "Portuguese");//habilita a acentuação para o português
 
     /*SORTEIA OS NUMEROS*/
     sorteio(concurso);
@@ -210,10 +240,9 @@ int main() {
         printf("2 - ESTATISTICAS DE NUMEROS\n");
         printf("3 - LISTAR 15 DUPLAS QUE MAIS SAIRAM\n");
         printf("4 - LISTAR OS 15 NUMEROS MAIS SORTEADOS\n");
+        printf("5 - LISTAR QUANT VEZES QUE NUMERO SAIU NAS JOGADAS\n");
         scanf("%d", &op);
-    }while(op<1 || op>4);
-
-
+    }while(op<1 || op>5);
 
     switch(op){
         case 1:
@@ -236,6 +265,17 @@ int main() {
             break;
         case 4:
             numerosUnicos(concurso);
+            break;
+        case 5:
+            /*IMPRIME O SORTEIO*/
+            for(l=0;l<LIN;l++){
+                for(c=0;c<COL;c++){
+                    printf("|%02d| ",concurso[l][c]);
+                }
+                printf("\n\n");
+            }
+
+            quantidadeJogadas(concurso);
             break;
     }//switch
 
