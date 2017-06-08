@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <locale.h>
 
-#define LIN 10
+#define LIN 5000
 #define COL 6
 
 void sorteio(int *concurso[LIN][COL]){
