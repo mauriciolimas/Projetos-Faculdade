@@ -214,7 +214,7 @@ void jogadas(){
 }//JOGADAS
 
 int main() {
-    int l, c, i, op=0, teste=0;
+    int l, c, i, k, op=0, teste=0, aux;
     int j, num, igual=0;
     int concurso[LIN][COL];
     int dezenas[60];
@@ -314,10 +314,18 @@ int main() {
                         printf("Entre com %d° numero: ", j+1);
                         /*TESTE E CAPTURA AS DEZENAS DO JOGO*/
                         do{
+                            scanf("%d", &teste);
                             if(teste<1 || teste>60){
                                 printf("\tSo sao aceitos numeros de 1 a 60 insira um numero valido: ");
                             }
-                            scanf("%d", &teste);
+                            /*VALIDAÇAO DE NUMEROS REPETIDOS*/
+                            for(k=0;k<=j+1;k++){
+                                if(teste==aposta[i].jogo[k]){
+                                    printf("Numero nao pode ser repetido\n");
+                                    j--;
+                                    continue;
+                                }
+                            }
                         }while(teste<1 || teste>60);
 
                         aposta[i].jogo[j] = teste;
@@ -325,16 +333,30 @@ int main() {
                     printf("\n\n");
                 }//FOR I
 
+                /*ORDERNAR OS NUMEROS DA JOGADA*/
+                for(k=0;k<3;k++){
+                    for(j=0;j<6;j++){
+                        for(i=0;i<6-j-1;i++){
+                            if(aposta[k].jogo[i]>aposta[k].jogo[i+1]){
+                                aux = aposta[k].jogo[i];
+                                aposta[k].jogo[i] = aposta[k].jogo[i+1];
+                                aposta[k].jogo[i+1] = aux;
+
+                            }//if
+                        }//for I
+                    }//for J
+                }
+                /*FIM ORDERNAR OS NUMEROS DA JOGADA*/
+                /*IMPRIME AS JOGADAS*/
                 for(i=0;i<3;i++){
                     printf("Jogador %d: %s\n", i+1, aposta[i].nome);
                     printf("CPF: %s\n", aposta[i].cpf);
                     printf("Jogo: ");
                     for(j=0;j<6;j++){
-                        printf("[%d] ", aposta[i].jogo[j]);
+                        printf("[%02d] ", aposta[i].jogo[j]);
                     }
                     printf("\n\n");
                 }
-
                 printf("\n\n");
                 break;
         }//SWITCH
