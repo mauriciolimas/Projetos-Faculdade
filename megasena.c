@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <string.h>
 
 #define LIN 5000
 #define COL 6
@@ -205,11 +206,25 @@ void quantidadeJogadas(int *vetor[LIN][COL]){
 
 }
 
+void jogadas(){
+    int i, j;
+
+
+
+}//JOGADAS
+
 int main() {
-    int l, c, i, op=0;
+    int l, c, i, op=0, teste=0;
     int j, num, igual=0;
     int concurso[LIN][COL];
     int dezenas[60];
+
+    struct sena{
+        char nome[50];
+        char cpf[11];
+        int jogo[6];
+    };
+    struct sena aposta[3];
 
      setlocale(LC_ALL, "Portuguese");//habilita a acentuação para o português
 
@@ -246,9 +261,10 @@ int main() {
             printf("4 - LISTAR OS 15 NUMEROS UNICOS QUE MAIS SAIRAM NOS SORTEIOS\n");
             printf("5 - QUANTIDADE DE JOGADAS DESDE A ULTIMA VEZ QUE UM NUMERO FOI SORTEADO\n");
             printf("6 - LISTAR TODAS AS ESTATISTICAS\n");
+            printf("7 - FAZER JOGADAS\n");
             printf("0 - SAIR\n");
             scanf("%d", &op);
-        }while(op<0 || op>6);
+        }while(op<0 || op>7);
 
         switch(op){
             case 1:
@@ -276,7 +292,52 @@ int main() {
                 listarDuplas(concurso);
                 numerosUnicos(concurso);
                 quantidadeJogadas(concurso);
-        }//switch
+                break;
+            case 7:
+                /*CAPTURA AS APOSTAS*/
+                for(i=0;i<3;i++){
+                    printf("Entre com o nome do jogador %d: ", i+1);
+                    fflush(stdin);
+                    gets(aposta[i].nome);
+                    printf("Entre o seu CPF %s [só os numeros]: ", aposta[i].nome);
+                    /*CAPTURA E TESTA O CPF*/
+                    do{
+                        fflush(stdin);
+                        gets(aposta[i].cpf);
+                        teste = strlen(aposta[i].cpf);
+                        if(teste!=11){
+                            printf("O CPF deve conter 11 digitos, insira um CPF valido: ");
+                        }
+                    }while(teste!=11);
+
+                    for(j=0;j<6;j++){
+                        printf("Entre com %d° numero: ", j+1);
+                        /*TESTE E CAPTURA AS DEZENAS DO JOGO*/
+                        do{
+                            if(teste<1 || teste>60){
+                                printf("\tSo sao aceitos numeros de 1 a 60 insira um numero valido: ");
+                            }
+                            scanf("%d", &teste);
+                        }while(teste<1 || teste>60);
+
+                        aposta[i].jogo[j] = teste;
+                    }
+                    printf("\n\n");
+                }//FOR I
+
+                for(i=0;i<3;i++){
+                    printf("Jogador %d: %s\n", i+1, aposta[i].nome);
+                    printf("CPF: %s\n", aposta[i].cpf);
+                    printf("Jogo: ");
+                    for(j=0;j<6;j++){
+                        printf("[%d] ", aposta[i].jogo[j]);
+                    }
+                    printf("\n\n");
+                }
+
+                printf("\n\n");
+                break;
+        }//SWITCH
         if(op!=0){
             getch();
         }
