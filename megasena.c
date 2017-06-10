@@ -3,9 +3,11 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
+#include <windows.h>
 
 #define LIN 5000
 #define COL 6
+#define JOGADOR 3
 
 
 void bubleSort(int *vetor[LIN][COL]){
@@ -206,18 +208,51 @@ void quantidadeJogadas(int *vetor[LIN][COL]){
 
 }
 
-void jogadas(){
-    int i, j;
 
+void corrigirjogos(int *aposta[], int *sorteios[LIN][COL], char nome[]){
+    int acertos = 0, melhorresultado = 0, melhorjogo = 0;
+    int l, c, i;
 
+    for(l=0;l<LIN;l++){
+        acertos = 0;
+        for(i=0;i<COL;i++){
+            for(c=0;c<COL;c++){
+                if(aposta[i]==sorteios[l][c]){
+                    acertos += 1;
+                }
+            }//FOR C
+            if(acertos > melhorresultado){
+                melhorresultado = acertos;
+                melhorjogo = l;
+            }
+        }//FOR I
+    }//FOR L
+    if(melhorresultado == 0){
+        printf("\n%s, você acertou %d numeros\n", nome, melhorresultado);
+    }else{
+        if(melhorresultado==6){
+            for(i=1;i<=10;i++){
+                if(i%2==0){
+                    Sleep(100);
+                    system("color 07");
+                }else{
+                    Sleep(100);
+                    system("color 47");
+                }
+            }
+            printf("\nParabéns %s, você acertou %d numeros! Sorteio [%04d]\n", nome, melhorresultado, melhorjogo+1);
+        }else{
+            printf("\nParabéns %s, você acertou %d numeros! Sorteio [%04d]\n", nome, melhorresultado, melhorjogo+1);
+        }
+    }
 
-}//JOGADAS
+}//CORRIGIR JOGOS
 
 int main() {
     int l, c, i, k, op=0, teste=0, aux;
-    int j, num, igual=0;
+    int j, num, igual=0, resultadojogo = 0;
     int concurso[LIN][COL];
-    int dezenas[60];
+    int dezenas[60], numaposta[6];
 
     struct sena{
         char nome[50];
@@ -254,15 +289,16 @@ int main() {
     do{
         do{
             system("cls");
-            printf("Menu Principal\n\n");
-            printf("1 - IMPRIMIR SORTEIOS\n");
-            printf("2 - LISTAR QUANTAS VEZES CADA NUMERO SAIU\n");
-            printf("3 - LISTAR 15 DUPLAS QUE MAIS SAIRAM NOS SORTEIOS\n");
-            printf("4 - LISTAR OS 15 NUMEROS UNICOS QUE MAIS SAIRAM NOS SORTEIOS\n");
-            printf("5 - QUANTIDADE DE JOGADAS DESDE A ULTIMA VEZ QUE UM NUMERO FOI SORTEADO\n");
-            printf("6 - LISTAR TODAS AS ESTATISTICAS\n");
-            printf("7 - FAZER JOGADAS\n");
-            printf("0 - SAIR\n");
+            printf("MENU PRINCIPAL\n\n");
+            printf("\t1 - IMPRIMIR SORTEIOS\n");
+            printf("\t2 - LISTAR QUANTAS VEZES CADA NUMERO SAIU\n");
+            printf("\t3 - LISTAR 15 DUPLAS QUE MAIS SAIRAM NOS SORTEIOS\n");
+            printf("\t4 - LISTAR OS 15 NUMEROS UNICOS QUE MAIS SAIRAM NOS SORTEIOS\n");
+            printf("\t5 - QUANTIDADE DE JOGADAS DESDE A ULTIMA VEZ QUE UM NUMERO FOI SORTEADO\n");
+            printf("\t6 - LISTAR TODAS AS ESTATISTICAS\n");
+            printf("\t7 - FAZER JOGADAS\n");
+            printf("\t8 - IMPRIMIR AS APOSTAS\n");
+            printf("\t0 - SAIR\n");
             scanf("%d", &op);
         }while(op<0 || op>7);
 
@@ -295,7 +331,7 @@ int main() {
                 break;
             case 7:
                 /*CAPTURA AS APOSTAS*/
-                for(i=0;i<3;i++){
+                for(i=0;i<JOGADOR;i++){
                     printf("Entre com o nome do jogador %d: ", i+1);
                     fflush(stdin);
                     gets(aposta[i].nome);
@@ -334,7 +370,7 @@ int main() {
                 }//FOR I
 
                 /*ORDERNAR OS NUMEROS DA JOGADA*/
-                for(k=0;k<3;k++){
+                for(k=0;k<JOGADOR;k++){
                     for(j=0;j<6;j++){
                         for(i=0;i<6-j-1;i++){
                             if(aposta[k].jogo[i]>aposta[k].jogo[i+1]){
@@ -347,14 +383,25 @@ int main() {
                     }//for J
                 }
                 /*FIM ORDERNAR OS NUMEROS DA JOGADA*/
+                /*VERIFICA OS ACERTOS E O SORTEIO COM MAIOR PONTUAÇÃO*/
+                for(i=0;i<JOGADOR;i++){
+                    corrigirjogos(aposta[i].jogo, concurso, aposta[i].nome);
+                    printf("\n");
+                }
+                printf("\n\n");
+
+                break;
+            case 8:
                 /*IMPRIME AS JOGADAS*/
-                for(i=0;i<3;i++){
+                for(i=0;i<JOGADOR;i++){
                     printf("Jogador %d: %s\n", i+1, aposta[i].nome);
                     printf("CPF: %s\n", aposta[i].cpf);
                     printf("Jogo: ");
                     for(j=0;j<6;j++){
                         printf("[%02d] ", aposta[i].jogo[j]);
+                        numaposta[j] = aposta[i].jogo[j];
                     }
+                    corrigirjogos(aposta[i].jogo, concurso, aposta[i].nome);
                     printf("\n\n");
                 }
                 printf("\n\n");
