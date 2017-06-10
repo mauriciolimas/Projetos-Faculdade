@@ -9,6 +9,16 @@
 #define COL 6
 #define JOGADOR 3
 
+void imprimir(int *concurso[LIN][COL]){
+    int l, c;
+
+    for(l=0;l<LIN;l++){
+        for(c=0;c<COL;c++){
+            printf("|%02d| ",concurso[l][c]);
+        }
+            printf("\n\n");
+    }
+}
 
 void bubleSort(int *vetor[LIN][COL]){
     int i, j, k, aux;
@@ -228,7 +238,7 @@ void corrigirjogos(int *aposta[], int *sorteios[LIN][COL], char nome[]){
         }//FOR I
     }//FOR L
     if(melhorresultado == 0){
-        printf("\n%s, você acertou %d numeros\n", nome, melhorresultado);
+        printf("\n%s você acertou %d numeros\n", nome, melhorresultado);
     }else{
         if(melhorresultado==6){
             for(i=1;i<=10;i++){
@@ -300,16 +310,11 @@ int main() {
             printf("\t8 - IMPRIMIR AS APOSTAS\n");
             printf("\t0 - SAIR\n");
             scanf("%d", &op);
-        }while(op<0 || op>7);
+        }while(op<0 || op>8);
 
         switch(op){
             case 1:
-                for(l=0;l<LIN;l++){
-                    for(c=0;c<COL;c++){
-                        printf("|%02d| ",concurso[l][c]);
-                    }
-                    printf("\n\n");
-                }
+                imprimir(concurso);
                 break;
             case 2:
                 estatistica(dezenas, concurso);
